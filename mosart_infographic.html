@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOSart Labs: Indigenizing Battery Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F5; /* Light Gray Background */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Default max-width, can be overridden by Tailwind */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height */
+            max-height: 400px; /* Max height */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 350px;
+            }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .section-title {
+            color: #1A237E; /* Dark Blue */
+            border-bottom: 3px solid #2962FF; /* Bright Blue */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .big-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2962FF; /* Bright Blue */
+        }
+        .sub-text {
+            color: #757575; /* Medium Gray */
+        }
+        .accent-text {
+            color: #00BFA5; /* Vibrant Teal */
+            font-weight: 600;
+        }
+        .primary-button {
+            background-color: #FF6D00; /* Bright Orange */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            text-align: center;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        .primary-button:hover {
+            background-color: #E65100; /* Darker Orange */
+        }
+        .flow-node {
+            background-color: #E3F2FD; /* Light Blue */
+            border: 2px solid #2962FF; /* Bright Blue */
+            color: #1A237E; /* Dark Blue */
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #2962FF; /* Bright Blue */
+            margin: 0 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 2.5rem; /* Space for dot and line */
+            padding-bottom: 1.5rem;
+            border-left: 2px solid #2962FF; /* Bright Blue */
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -0.5625rem; /* (18px/2) - (2px/2) */
+            top: 0;
+            width: 1.125rem; /* 18px */
+            height: 1.125rem;
+            background-color: #FF6D00; /* Bright Orange */
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        .table-header {
+            background-color: #1A237E; /* Dark Blue */
+            color: white;
+        }
+        .table-cell {
+            padding: 0.75rem;
+            border: 1px solid #E0E0E0; /* Light Grey Border */
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-gradient-to-r from-[#1A237E] to-[#2962FF] text-white py-12 px-4 sm:px-6 lg:px-8 text-center">
+        <img src="https://raw.githubusercontent.com/MOSart-Labs/logos/main/MOSart-Labs-Logo-Icon-White-Background-1024x1024.png" alt="MOSart Labs Logo" class="h-20 w-20 mx-auto mb-4 rounded-full" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('beforeend', '<div class=\'w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center text-[#1A237E] font-bold text-2xl\'>ML</div>')">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Indigenizing Battery Management</h1>
+        <p class="text-xl md:text-2xl mb-2">The MOSart Labs Opportunity: Engineered in India, for the World.</p>
+        <p class="text-lg text-gray-300">Pioneering India's first advanced Battery Management System (BMS) ICs.</p>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="challenge" class="mb-12">
+            <h2 class="text-3xl font-bold section-title">The Imperative for Indigenous BMS</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold text-[#1A237E] mb-3">India's BMS Dependency</h3>
+                    <p class="mb-2">India's burgeoning Electric Vehicle (EV) and home Uninterruptible Power Supply (UPS) markets currently rely <span class="accent-text">100% on imported BMS ICs</span>.</p>
+                    <p class="mb-2">This reliance translates to a staggering <span class="big-number text-3xl">₹30,000+ Cr</span> annual semiconductor trade deficit, inflating costs for Indian consumers by <span class="accent-text">15-20%</span>.</p>
+                    <p>Recent global supply chain disruptions have starkly highlighted this vulnerability, leading to <span class="accent-text">30-week delays</span> and over <span class="accent-text">₹850 Crore</span> in production losses for Indian manufacturers.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold text-[#1A237E] mb-3">The Time is Now</h3>
+                    <p class="mb-2">Several factors converge to make this the perfect moment for indigenous BMS development:</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        <li><span class="font-semibold text-[#2962FF]">Ecosystem Maturity:</span> India's VC → Design → Fab → Testing infrastructure has reached critical mass.</li>
+                        <li><span class="font-semibold text-[#2962FF]">Market Inflection:</span> EV adoption in India is projected for explosive growth at <span class="accent-text">35% CAGR</span> through 2035.</li>
+                        <li><span class="font-semibold text-[#2962FF]">Policy Tailwinds:</span> The <span class="accent-text">₹76,000 Crore</span> PLI scheme and DLI 2.0 program offer unprecedented government support.</li>
+                    </ul>
+                    <p class="mt-3">Global BMS suppliers focus on 4-wheeler EVs, largely neglecting the 2W/3W and UPS markets, which are massive in Asia, especially India. Their solutions are often over-engineered and costly for these segments.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="mb-12">
+            <h2 class="text-3xl font-bold section-title">MOSart Labs' Innovation: The ML1024 BMS IC</h2>
+            <div class="card">
+                <p class="text-lg text-center mb-6">MOSart Labs introduces the <span class="font-bold text-[#2962FF]">ML1024</span>, India's first indigenous BMS IC, meticulously designed for the unique needs of the 2-wheeler, 3-wheeler, and home UPS markets. It's a leap towards technological self-reliance and optimized performance.</p>
+                
+                <h3 class="text-2xl font-semibold text-[#1A237E] mb-4 text-center">ML1024 System Architecture</h3>
+                <div class="p-4 border-2 border-dashed border-[#00BFA5] rounded-lg bg-gray-50">
+                    <p class="text-center text-sm text-gray-600 mb-4">(Conceptual representation of ML1024 functional blocks using HTML/CSS)</p>
+                    <div class="flex flex-col items-center space-y-4">
+                        <div class="flow-node w-full md:w-3/4 lg:w-1/2">Battery Pack ⇄ ML1024 Core ⇄ Output to Motor Driver / Input from Charger</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                            <div class="flow-node">24 Cell Balancer</div>
+                            <div class="flow-node">High Accuracy IVT Sensor</div>
+                            <div class="flow-node">Lock-Step MCU</div>
+                        </div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full md:w-3/4 lg:w-2/3">
+                            <div class="flow-node">AI Accelerator (DTT Technology)</div>
+                            <div class="flow-node">PMIC for the chip</div>
+                        </div>
+                         <div class="flow-arrow">↓</div>
+                        <div class="flow-node w-full md:w-1/2">Integrated Gate Drivers & ASIL-D Safety Monitors</div>
+                    </div>
+                </div>
+                <p class="text-center mt-4 text-gray-700">The ML1024 integrates key functionalities into a single chip, reducing system cost and complexity while maximizing safety and performance.</p>
+
+                <h3 class="text-2xl font-semibold text-[#1A237E] mt-8 mb-4">Key Advantages of ML1024:</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="p-4 bg-blue-50 rounded-lg border border-[#2962FF]">
+                        <h4 class="font-bold text-[#1A237E] text-lg mb-1">🛡️ Unmatched Safety</h4>
+                        <p class="text-sm text-gray-700">ASIL-D & AEC-Q100 compliant for highest safety standards.</p>
+                    </div>
+                    <div class="p-4 bg-teal-50 rounded-lg border border-[#00BFA5]">
+                        <h4 class="font-bold text-[#1A237E] text-lg mb-1">⚙️ Superior Scalability</h4>
+                        <p class="text-sm text-gray-700">Supports 4-24 cells, up to 85V operation, adaptable to various battery chemistries.</p>
+                    </div>
+                    <div class="p-4 bg-orange-50 rounded-lg border border-[#FF6D00]">
+                        <h4 class="font-bold text-[#1A237E] text-lg mb-1">🎯 World-Class Precision</h4>
+                        <p class="text-sm text-gray-700">0.1% IVT accuracy, ±1mV voltage sensing for optimal performance.</p>
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded-lg border border-[#2962FF]">
+                        <h4 class="font-bold text-[#1A237E] text-lg mb-1">⚡ Fast Balancing</h4>
+                        <p class="text-sm text-gray-700">Up to 300mA/cell balancing current for enhanced efficiency.</p>
+                    </div>
+                    <div class="p-4 bg-teal-50 rounded-lg border border-[#00BFA5]">
+                        <h4 class="font-bold text-[#1A237E] text-lg mb-1">🔗 High Integration</h4>
+                        <p class="text-sm text-gray-700">MCU + AFE + Drivers in one IC, reducing system cost by $4-6.</p>
+                    </div>
+                    <div class="p-4 bg-orange-50 rounded-lg border border-[#FF6D00]">
+                        <h4 class="font-bold text-[#1A237E] text-lg mb-1">🤖 AI-Powered DTT</h4>
+                        <p class="text-sm text-gray-700">Proprietary Digital Twin Tracking for predictive health & extended life.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dtt" class="mb-12">
+            <h2 class="text-3xl font-bold section-title">Revolutionizing Battery Health: AI-Powered DTT</h2>
+            <div class="card">
+                <p class="text-lg mb-6">MOSart Labs' proprietary Digital Twin Tracking (DTT) technology is at the heart of the ML1024. It uses high-precision, real-time IVT data and AI/ML algorithms to create a 'digital twin' of each battery cell. This enables predictive monitoring and optimized balancing, setting a new industry benchmark.</p>
+                
+                <h3 class="text-2xl font-semibold text-[#1A237E] mb-4 text-center">DTT Technology Flow</h3>
+                <div class="flex flex-col md:flex-row justify-around items-center space-y-4 md:space-y-0 md:space-x-4 p-4 border-2 border-dashed border-[#2962FF] rounded-lg bg-gray-50">
+                    <div class="flow-node w-full md:w-1/4">Real-time Sensor Inputs (I, V, T vs. Time)</div>
+                    <div class="flow-arrow hidden md:flex">➔</div> <div class="flow-arrow flex md:hidden">↓</div>
+                    <div class="flow-node w-full md:w-1/4">Calibrate Impedance & Extract OCV (AI/ML based)</div>
+                    <div class="flow-arrow hidden md:flex">➔</div> <div class="flow-arrow flex md:hidden">↓</div>
+                    <div class="flow-node w-full md:w-1/4">Accurate SoC, SoH & Model Updates (AI/ML based)</div>
+                </div>
+                <p class="text-center mt-4 text-gray-700">This continuous feedback loop ensures unparalleled accuracy and proactive battery management.</p>
+
+                <h3 class="text-2xl font-semibold text-[#1A237E] mt-8 mb-4">Benefits of DTT:</h3>
+                 <ul class="list-disc list-inside space-y-2 text-gray-700 pl-4">
+                    <li><span class="font-semibold text-[#00BFA5]">Extended Battery Life:</span> Increases lifespan by up to <span class="accent-text">20%</span> through predictive maintenance and optimized balancing.</li>
+                    <li><span class="font-semibold text-[#00BFA5]">Enhanced Safety:</span> ASIL-D compliant fault tolerance prevents thermal runaway and failures.</li>
+                    <li><span class="font-semibold text-[#00BFA5]">Unmatched SoC Accuracy:</span> Multi-metric error reduction for precise State of Charge readings.</li>
+                    <li><span class="font-semibold text-[#00BFA5]">Efficient Charging:</span> Fast balancing (up to 300mA/cell) enhances charge efficiency.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="market" class="mb-12">
+            <h2 class="text-3xl font-bold section-title">Tapping into a High-Growth Market</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 card">
+                    <h3 class="text-2xl font-semibold text-[#1A237E] mb-1">Global BMS Unit Sales Projections</h3>
+                    <p class="text-sm sub-text mb-4">(2W, 3W, Garden Tools, Home UPS Segments)</p>
+                    <div class="chart-container h-[350px] md:h-[400px] max-w-full">
+                        <canvas id="bmsUnitSalesChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-gray-700">The demand for BMS units in these underserved segments is projected to grow from 21 million units in 2024 to over 152 million units by 2035, representing a significant and expanding market.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold text-[#1A237E] mb-1">India's Pivotal Role</h3>
+                    <p class="text-sm sub-text mb-4">(Annual Two-Wheeler Production)</p>
+                    <div class="chart-container h-[250px] md:h-[300px]">
+                        <canvas id="twoWheelerShareChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-gray-700">India manufactures approximately <span class="accent-text">25% of the world's 2-wheelers</span>. With the EV transition, a substantial portion of the BMS demand in this segment will originate from India. We expect <span class="accent-text">>25% of BMS units</span> in these target segments to be consumed in India annually.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="competition" class="mb-12">
+            <h2 class="text-3xl font-bold section-title">MOSart Labs' Competitive Edge</h2>
+            <div class="card">
+                <p class="text-lg mb-6">While global giants like Texas Instruments, Renesas, and Qorvo dominate the BMS market, their primary focus remains on 4-wheeler automotive applications. This leaves a significant gap in the 2W, 3W, and UPS segments, where MOSart Labs' ML1024 offers a tailored, cost-effective, and feature-rich solution.</p>
+                <h3 class="text-2xl font-semibold text-[#1A237E] mb-4">Feature Snapshot: ML1024 vs. Competitors</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="table-cell">Feature</th>
+                                <th class="table-cell text-center bg-[#00BFA5]">MOSart Labs ML1024</th>
+                                <th class="table-cell text-center">TI BQ41Z90 (Example)</th>
+                                <th class="table-cell text-center">Renesas RAJ240100 (Example)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white">
+                                <td class="table-cell font-semibold">Cell Support</td>
+                                <td class="table-cell text-center font-bold text-[#00BFA5]">3-24 series</td>
+                                <td class="table-cell text-center">3-16 series</td>
+                                <td class="table-cell text-center">3-10 series</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="table-cell font-semibold">Processor</td>
+                                <td class="table-cell text-center font-bold text-[#00BFA5]">32bit M33 RISC + AI Co-processor</td>
+                                <td class="table-cell text-center">32-bit RISC (Ultra-low power)</td>
+                                <td class="table-cell text-center">RL78 CPU Core (Ultra-low power)</td>
+                            </tr>
+                            <tr class="bg-white">
+                                <td class="table-cell font-semibold">Cell Balancing Current</td>
+                                <td class="table-cell text-center font-bold text-[#00BFA5]">Up to 300 mA/cell</td>
+                                <td class="table-cell text-center">Up to 50 mA/cell</td>
+                                <td class="table-cell text-center">Integrated (200 Ω resistors)</td>
+                            </tr>
+                             <tr class="bg-gray-50">
+                                <td class="table-cell font-semibold">Integration for Cost Saving</td>
+                                <td class="table-cell text-center font-bold text-[#00BFA5]">High (MCU+AFE+Drivers), $4-6 saving</td>
+                                <td class="table-cell text-center">Moderate</td>
+                                <td class="table-cell text-center">Moderate</td>
+                            </tr>
+                            <tr class="bg-white">
+                                <td class="table-cell font-semibold">Target Applications</td>
+                                <td class="table-cell text-center font-bold text-[#00BFA5]">E-bikes, 2/3W, Garden Tools, UPS, Drones</td>
+                                <td class="table-cell text-center">E-bikes, Scooters, Garden Tools</td>
+                                <td class="table-cell text-center">E-bikes, Power Tools, Drones</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-4 text-gray-700">ML1024 offers superior cell support, advanced processing with AI, significantly higher balancing current, and greater cost savings through integration, making it ideal for its target markets.</p>
+            </div>
+        </section>
+        
+        <section id="roadmap" class="mb-12">
+            <h2 class="text-3xl font-bold section-title">Strategic Roadmap to Market Leadership</h2>
+            <div class="card">
+                <p class="text-lg mb-6">MOSart Labs has a clear, phased approach to develop and commercialize its BMS solutions, ensuring early market entry and progressive technological advancement.</p>
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-[#1A237E] mb-1">Phase 1: Foundation & Early Monetization <span class="text-lg font-normal text-[#FF6D00]">(15 Months)</span></h3>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-semibold text-[#2962FF]">Develop Production-Ready BMS Boards</h4>
+                            <p class="text-sm text-gray-700">Create three BMS board variants using existing ICs, optimized for key applications. This allows for early revenue and customer engagement.</p>
+                        </div>
+                        <div class="timeline-item">
+                             <div class="timeline-dot"></div>
+                            <h4 class="font-semibold text-[#2962FF]">Finalize ML1024 IC Architecture & Datasheet</h4>
+                            <p class="text-sm text-gray-700">Define detailed requirements and architecture for the BMS smart AFE IC. Engage lead customers for feedback.</p>
+                        </div>
+                         <div class="timeline-item border-l-transparent">
+                             <div class="timeline-dot"></div>
+                            <h4 class="font-semibold text-[#2962FF]">Pilot Production & Initial Marketing</h4>
+                            <p class="text-sm text-gray-700">1K parts per board design. Secure initial orders for BMS boards.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-2xl font-semibold text-[#1A237E] mb-1">Phase 2: IC Development & Scale-Up <span class="text-lg font-normal text-[#FF6D00]">(3 Years)</span></h3>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-semibold text-[#2962FF]">Design, Verification & Tape-Out (TO) of ML1024 IC</h4>
+                            <p class="text-sm text-gray-700">Complete the design and verification of the BMS smart AFE IC, including documentation for ASIL-D safety rating. Discussion underway with ams-OSRAM for ASIC development.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-semibold text-[#2962FF]">Silicon Validation & Application Development</h4>
+                            <p class="text-sm text-gray-700">Validate first silicon, identify and fix bugs for the final product. Develop applications and reference designs.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-semibold text-[#2962FF]">Automotive Qualification & Volume Production Readiness</h4>
+                            <p class="text-sm text-gray-700">Achieve AEC-Q100 qualification. Provide 10K engineering samples. Prepare for mass production.</p>
+                        </div>
+                         <div class="timeline-item border-l-transparent">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-semibold text-[#2962FF]">Monetize BMS IC & Expand Customer Reach</h4>
+                            <p class="text-sm text-gray-700">Ramp up sales and marketing efforts for the ML1024 IC.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="mb-12">
+            <h2 class="text-3xl font-bold section-title">Projected Growth & Investment Opportunity</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 card">
+                    <h3 class="text-2xl font-semibold text-[#1A237E] mb-1">Projected Annual Revenue (INR Crores)</h3>
+                    <p class="text-sm sub-text mb-4">(BMS Boards & BMS Smart AFE IC)</p>
+                    <div class="chart-container h-[350px] md:h-[400px] max-w-full">
+                        <canvas id="revenueProjectionChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-gray-700">MOSart Labs projects significant revenue growth, driven initially by BMS boards and then substantially by the ML1024 IC sales. By 2035, we target <span class="accent-text">25% of the Indian market</span> and <span class="accent-text">5% of the world market</span> for our IC, aiming for <span class="font-bold text-[#2962FF]">₹500Cr+ annual revenue</span> with a gross margin of approximately <span class="accent-text">50%</span>.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold text-[#1A237E] mb-3">Investment Ask</h3>
+                    <p class="mb-4 text-gray-700">To fuel this ambitious vision, MOSart Labs is seeking investment structured in two phases:</p>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 rounded-lg border-2 border-dashed border-[#2962FF]">
+                            <h4 class="text-xl font-semibold text-[#1A237E]">Phase 1:</h4>
+                            <p class="big-number text-4xl">₹12 Cr</p>
+                            <p class="sub-text">(USD 1.5M)</p>
+                            <p class="mt-1 text-sm text-gray-700">To develop production-ready BMS boards and finalize IC architecture.</p>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg border-2 border-dashed border-[#00BFA5]">
+                            <h4 class="text-xl font-semibold text-[#1A237E]">Phase 2:</h4>
+                            <p class="big-number text-4xl">₹76.3 Cr</p>
+                            <p class="sub-text">(USD 9M)</p>
+                            <p class="mt-1 text-sm text-gray-700">For IC design, validation, qualification, and ramp-up to mass production.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta" class="text-center py-12 bg-gradient-to-r from-[#00BFA5] to-[#00796B] text-white rounded-lg">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Accelerate India's Electric Future with MOSart Labs</h2>
+            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">Partner with us to capture a significant share of the exponentially growing BMS market and establish India as a global leader in this critical technology. We are not just building a product; we are building a foundation for India's self-reliant electric future.</p>
+            <a href="mailto:rajesh@mosartlabs.com?subject=MOSart%20Labs%20Investment%20Inquiry" class="primary-button text-lg">Partner With Us</a>
+            <p class="mt-6 text-sm">Contact: Rajesh Gupta & Dr. Krishna Kanth Avalur<br>rajesh@mosartlabs.com | kk@mosartlabs.com</p>
+        </section>
+    </main>
+
+    <footer class="text-center py-6 bg-[#1A237E] text-gray-300 text-sm">
+        <p>&copy; 2025 MOSart Labs. All Rights Reserved. Engineered in India, for the World.</p>
+        <!-- 
+            Infographic Narrative Plan:
+            1. Hero: Introduce MOSart Labs & the core problem (BMS import dependency).
+            2. The Challenge & Why Now: Detail India's BMS dependency, costs, supply issues. Highlight market timing (ecosystem, EV growth, policy).
+            3. MOSart Labs Solution - ML1024: Introduce the ML1024 IC, its architecture (HTML/CSS diagram), and key advantages.
+            4. AI-Powered DTT: Explain the DTT technology, its flow (HTML/CSS diagram), and benefits.
+            5. Market Opportunity: Showcase BMS unit sales projections (Chart.js Bar Chart) and India's 2-wheeler production share (Chart.js Donut Chart).
+            6. Competitive Landscape: Simplified comparison table (HTML Table) showing ML1024's edge.
+            7. Business Plan & Roadmap: Illustrate the two-phase plan (HTML/CSS Timeline).
+            8. Financial Projections & Investment: Display revenue projections (Chart.js Bar Chart) and the investment ask.
+            9. Call to Action: Encourage partnership.
+
+            Visualization Choices Summary (Confirming NO SVG, NO MERMAID JS):
+            - BMS Import Dependency/Costs: Text callouts, Big Numbers. (HTML/CSS, NO SVG)
+            - EV Adoption CAGR: Big Number. (HTML/CSS, NO SVG)
+            - ML1024 Architecture: HTML/CSS block diagram. (HTML/CSS, NO SVG, NO MERMAID JS)
+            - DTT Technology Flow: HTML/CSS flow diagram. (HTML/CSS, NO SVG, NO MERMAID JS)
+            - BMS Unit Sales Projection: Chart.js Stacked Bar Chart. (Canvas, NO SVG)
+            - India's 2-Wheeler Production Share: Chart.js Donut Chart. (Canvas, NO SVG)
+            - Competitive Feature Comparison: HTML Table. (HTML/CSS, NO SVG)
+            - Business Plan Phases: HTML/CSS Timeline. (HTML/CSS, NO SVG, NO MERMAID JS)
+            - Projected Revenue: Chart.js Stacked/Grouped Bar Chart. (Canvas, NO SVG)
+            - Investment Ask: Text callouts/Big Numbers. (HTML/CSS, NO SVG)
+
+            Color Palette Used: "Electric Future"
+            - Dark Blue (Primary Text, Headers): #1A237E
+            - Bright Blue (Primary Accent, Chart Element 1): #2962FF
+            - Vibrant Teal (Secondary Accent, Chart Element 2): #00BFA5
+            - Bright Orange (Call to Action, Chart Element 3): #FF6D00
+            - Light Gray (Backgrounds for cards/sections): #F5F5F5
+            - Medium Gray (Secondary Text): #757575
+            - White: #FFFFFF
+            - Chart Element 4 (Amber): #FFAB00
+            
+            Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in this output. All diagrams are pure HTML/CSS. All charts use Chart.js (Canvas).
+        -->
+    </footer>
+
+    <script>
+        const wrapLabel = (str, maxWidth) => {
+            if (str.length <= maxWidth) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + words[i].length + 1 <= maxWidth) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        };
+
+        const chartTooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+        
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: chartTooltipTitleCallback
+                    }
+                },
+                legend: {
+                    labels: {
+                        color: '#1A237E', // Dark Blue for legend text
+                         font: {
+                            size: 12,
+                            family: 'Inter'
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { 
+                        color: '#757575', // Medium Gray for Y-axis ticks
+                        font: { family: 'Inter' }
+                    },
+                    grid: { color: '#E0E0E0' } // Light Grey grid lines
+                },
+                x: {
+                    ticks: { 
+                        color: '#757575', // Medium Gray for X-axis ticks
+                        font: { family: 'Inter' },
+                        callback: function(value, index, values) {
+                            const label = this.getLabelForValue(value);
+                            return wrapLabel(label, 10); // Wrap X-axis labels if too long (adjust char limit as needed)
+                        }
+                    },
+                    grid: { display: false }
+                }
+            }
+        };
+
+        // BMS Unit Sales Chart
+        const bmsUnitSalesCtx = document.getElementById('bmsUnitSalesChart')?.getContext('2d');
+        if (bmsUnitSalesCtx) {
+            new Chart(bmsUnitSalesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033', '2034', '2035'],
+                    datasets: [
+                        {
+                            label: 'Two Wheelers',
+                            data: [15, 18, 22, 27, 33, 40, 48, 57, 67, 79, 91, 103], // Sample data from PDF visual trend
+                            backgroundColor: '#2962FF', // Bright Blue
+                        },
+                        {
+                            label: 'Three Wheelers',
+                            data: [2, 2.5, 3, 3.5, 4, 5, 6, 7, 8.5, 10, 12, 14.5], // Sample data
+                            backgroundColor: '#00BFA5', // Vibrant Teal
+                        },
+                        {
+                            label: 'Garden Tools & UPS', // Combined for simplicity from "Garden Tools" in PDF
+                            data: [4, 4.5, 5, 5.5, 6, 7, 8, 9.5, 11, 13, 15, 17.5], // Sample data
+                            backgroundColor: '#FFAB00', // Amber
+                        }
+                    ]
+                },
+                options: { ...commonChartOptions, scales: {...commonChartOptions.scales, x: {...commonChartOptions.scales.x, stacked: true}, y: {...commonChartOptions.scales.y, stacked: true, title: { display: true, text: 'Millions of Units', color: '#1A237E'}}}}
+            });
+        }
+
+        // Two Wheeler Share Chart
+        const twoWheelerShareCtx = document.getElementById('twoWheelerShareChart')?.getContext('2d');
+        if (twoWheelerShareCtx) {
+            new Chart(twoWheelerShareCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['India (21M units)', 'Rest of World (61.8M units)'],
+                    datasets: [{
+                        label: 'Annual Two Wheeler Production',
+                        data: [21, 61.8], // Data from PDF page 5
+                        backgroundColor: ['#FF6D00', '#2962FF'], // Bright Orange, Bright Blue
+                        borderColor: ['#FFFFFF', '#FFFFFF'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: { callbacks: { title: chartTooltipTitleCallback } },
+                        legend: { position: 'bottom', labels: { color: '#1A237E', font: { family: 'Inter' } } }
+                    }
+                }
+            });
+        }
+
+        // Revenue Projection Chart
+        const revenueProjectionCtx = document.getElementById('revenueProjectionChart')?.getContext('2d');
+        if (revenueProjectionCtx) {
+            new Chart(revenueProjectionCtx, {
+                type: 'bar', // Changed to grouped bar for clarity
+                data: {
+                    labels: ['2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033', '2034', '2035'],
+                    datasets: [
+                        {
+                            label: 'BMS Boards Revenue',
+                            data: [5, 10, 15, 20, 30, 50, 70, 90, 120, 150, 200], // Sample data from PDF visual trend
+                            backgroundColor: '#00BFA5', // Vibrant Teal
+                        },
+                        {
+                            label: 'BMS IC Revenue',
+                            data: [0, 0, 2, 5, 25, 80, 150, 250, 350, 480, 650], // Sample data from PDF visual trend (BMC IC)
+                            backgroundColor: '#2962FF', // Bright Blue
+                        }
+                    ]
+                },
+                options: { ...commonChartOptions, scales: {...commonChartOptions.scales, x: {...commonChartOptions.scales.x}, y: {...commonChartOptions.scales.y, title: { display: true, text: 'Annual Revenue (INR Crores)', color: '#1A237E'}}}}
+            });
+        }
+
+    </script>
+</body>
+</html>
